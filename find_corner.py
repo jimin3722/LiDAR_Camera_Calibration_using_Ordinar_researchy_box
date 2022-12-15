@@ -1,11 +1,9 @@
 import cv2
 import numpy as np
 
-filename = 'test_img.png'
+filename = './asset/images/test_img.png'
 img = cv2.imread(filename)
-
 click_points = []
-green = (0, 255, 0)
 
 def onMouse(event, x, y, flags, param) :
     if event == cv2.EVENT_LBUTTONDOWN :
@@ -22,19 +20,5 @@ def onMouse(event, x, y, flags, param) :
 
 
 if __name__ == '__main__' :
-
-    # cv2.imshow('image', img)
-    # cv2.setMouseCallback('image', onMouse)
-    # 
-
-
-    re_project_ptx = np.load('./camera_infromation/reporject.npy')
-    re_project_ptx = re_project_ptx[:2, :]
-    print(re_project_ptx)
-
-    for i in range(6) :
-        cv2.line(img, (int(re_project_ptx[0, i]), int(re_project_ptx[1, i])), (int(re_project_ptx[0, i]), int(re_project_ptx[1, i])), green, 5)
-
-    cv2.imshow('image', img)
-    cv2.waitKey()
-
+    # find box corers 
+    cv2.setMouseCallback('image', onMouse)

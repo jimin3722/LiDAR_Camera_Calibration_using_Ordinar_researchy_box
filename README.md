@@ -9,12 +9,40 @@ This project implements the extrinsic calibration method of the ``Accurate Calib
 
 Result
 ------
-Left is a official image in paper. Right is my experiment. 
+
+This repo follows under step.
+<figure>
+  <img src="./asset/images/step.png" height='75%' width ='75%'>
+</figure>
+
+1. Search for plane candidates and find outliers
+<figure>
+  <img src="./asset/images/find_planes.png" height='30%' width ='30%'><img src="./asset/images/remove_outlier.png" height='27.7%' width ='27.7%'>
+</figure>
+
+2. Select 3 planes and box fitting
+<figure>
+  <img src="./asset/gif/double_filter.gif" height='42%' width ='42%'>
+</figure>
+
+3. Box refinement
+<figure>
+  <img src="./asset/gif/case1.gif" height='45%' width ='45%'><img src="./asset/gif/case2.gif" height='45%' width ='45%'>
+</figure>
+
+4. Reprojection
+<figure>
+  <img src="./asset/images/box_reprojection.png" height='50%' width ='50%'>
+</figure>
+
 
 Dependencies
 ------------
-It is tested with opencv-4.1.15. 
+It is tested with opencv-4.2.0 
 Visualization used Matplotlib3D and Open3D.
+
+This repo reused 3d ransac code from ``pyranscas3d/plane.py`` [code](https://github.com/leomariga/pyRANSAC-3D/blob/master/pyransac3d/plane.py)
+
 
 Citation
 -------- 
