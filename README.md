@@ -16,24 +16,26 @@ This repo follows under step.
 </figure>
 
 1. Search for plane candidates and find outliers
-<figure>
-  <img src="./asset/images/find_planes.png" height='30%' width ='30%'><img src="./asset/images/remove_outlier.png" height='27.7%' width ='27.7%'>
-</figure>
+<p>
+  <img src="./asset/images/find_planes.png" height='30%' width ='30%'/> 
+  <img src="./asset/images/remove_outlier.png" height='27.7%' width ='27.7%'/>
+</p>
 
 2. Select 3 planes and box fitting
-<figure>
+<p>
   <img src="./asset/gif/double_filter.gif" height='42%' width ='42%'>
-</figure>
+</p>
 
 3. Box refinement
-<figure>
-  <img src="./asset/gif/case1.gif" height='45%' width ='45%'><img src="./asset/gif/case2.gif" height='45%' width ='45%'>
-</figure>
+<p>
+  <img src="./asset/gif/case1.gif" height='45%' width ='45%'>
+  <img src="./asset/gif/case2.gif" height='45%' width ='45%'>
+</p>
 
 4. Reprojection
-<figure>
-  <img src="./asset/images/box_reprojection.png" height='50%' width ='50%'>
-</figure>
+<p>
+  <img src="./asset/images/box_reprojection.png" height='40%' width ='40%'>
+</p>
 
 
 Dependencies
