@@ -19,6 +19,8 @@ Visualization used Matplotlib3D and Open3D.
 Citation
 -------- 
 ```
+Mariga, L. (2022). pyRANSAC-3D (Version v0.6.0) [Computer software]. https://doi.org/10.5281/zenodo.7212567
+
 @InProceedings{Pusztai_2017_ICCV,
     author = {Pusztai, Zoltan and Hajder, Levente},
     title = {Accurate Calibration of LiDAR-Camera Systems Using Ordinary Boxes},
