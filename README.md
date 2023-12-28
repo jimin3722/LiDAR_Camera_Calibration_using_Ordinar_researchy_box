@@ -2,9 +2,7 @@
 
 Introduction
 ------------
-This project implements the extrinsic calibration method of the ``Accurate Calibration of LiDAR-Camera Systems Using Ordinary Boxes``. I tested the LiDAR - Camera system. 
-* LiDAR : ``Velodyne VLP-16`` 
-* RGB Camera : ``Intel RealSense D435``
+This repository is created for the purpose of analyzing and conducting research on the code [code](https://github.com/kdh2769/LiDAR_Camera_Calibration_using_Ordinary_box)
 * Official [paper](https://openaccess.thecvf.com/content_ICCV_2017_workshops/w6/html/Pusztai_Accurate_Calibration_of_ICCV_2017_paper.html).
 
 Result
@@ -44,6 +42,9 @@ It is tested with opencv-4.2.0
 Visualization used Matplotlib3D and Open3D.
 
 This repo reused 3d ransac code from ``pyranscas3d/plane.py`` [code](https://github.com/leomariga/pyRANSAC-3D/blob/master/pyransac3d/plane.py)
+
+This repo reused 3d ransac code from ``Owner avatar
+LiDAR_Camera_Calibration_using_Ordinary_box `` [code](https://github.com/kdh2769/LiDAR_Camera_Calibration_using_Ordinary_box)
 
 
 Citation
