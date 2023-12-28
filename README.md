@@ -2,7 +2,8 @@
 
 Introduction
 ------------
-This repository is created for the purpose of analyzing and conducting research on the code [code](https://github.com/kdh2769/LiDAR_Camera_Calibration_using_Ordinary_box)
+This repository is created for the purpose of analyzing and conducting research on the [code](https://github.com/kdh2769/LiDAR_Camera_Calibration_using_Ordinary_box)
+
 * Official [paper](https://openaccess.thecvf.com/content_ICCV_2017_workshops/w6/html/Pusztai_Accurate_Calibration_of_ICCV_2017_paper.html).
 
 Result
