@@ -91,16 +91,24 @@ def L2_plane(L1_equation, pts):
     best_inliers = []
     best_eq = []
     best_inliers = []
+
     for _ in range(max_iter) : 
         id_samples = random.sample(range(0, n_points), 2)
         pt_samples = pts[id_samples]
         vecA = pt_samples[1, :] - pt_samples[0, :]
-        vecB = L1_equation[:3] + pt_samples[0, :]
+        vecB = L1_equation[:3] #+ pt_samples[0, :]
         vecC = np.cross(vecA, vecB)
 
+        # print(np.dot(vecB,vecC)) 
+        # # print(np.dot(L1_equation[:3],vecC)) 
+        # print("----------------")
+
         vecC = vecC / np.linalg.norm(vecC)
+        
+        
         k = -np.sum(np.multiply(vecC, pt_samples[1, :]))
         plane_eq = [vecC[0], vecC[1], vecC[2], k]
+
 
         pt_id_inliers = []  # list of inliers ids
         dist_pt = (
@@ -114,7 +122,10 @@ def L2_plane(L1_equation, pts):
             best_inliers = pt_id_inliers
         inliers = best_inliers
         equation = best_eq
-
+    
+    # print(np.dot(L1_equation[:3],vecC)) 
+    # print("----------------")
+    
     return equation, inliers
 
 
@@ -128,9 +139,15 @@ def L3_plane(L1_equation, L2_equation, pts):
     for _ in range(max_iter) : 
         id_samples = random.sample(range(0, n_points), 1)
         pt_samples = pts[id_samples]
-        vecA = L1_equation[:3] + pt_samples[0, :]
-        vecB = L2_equation[:3] + pt_samples[0, :]
+        vecA = L1_equation[:3] #+ pt_samples[0, :]
+        vecB = L2_equation[:3] #+ pt_samples[0, :]
+        
         vecC = np.cross(vecA, vecB)
+
+        # print("vecB",vecB) 
+        # print("vecA",vecA) 
+        # print(np.dot(vecA,vecC)) 
+        # print("----------------")
 
         vecC = vecC / np.linalg.norm(vecC)
         k = -np.sum(np.multiply(vecC, pt_samples[0, :]))
@@ -153,6 +170,10 @@ def L3_plane(L1_equation, L2_equation, pts):
 
 def fit_orthogonal_planes(planes_idx, planes_pts, viz_mode = True) :
     print(f'선택받은 면 {planes_idx[0]}번째 면, {planes_idx[1]}번째 면, {planes_idx[2]}번째 면') 
+
+    print(len(planes_pts[0]))
+    print(len(planes_pts[1]))
+    print(len(planes_pts[2]))
     
     L1_pts = planes_pts[planes_idx[0]]
     L2_pts = planes_pts[planes_idx[1]]
@@ -167,7 +188,12 @@ def fit_orthogonal_planes(planes_idx, planes_pts, viz_mode = True) :
     for _ in range(100) : 
         L1_equation, L1_inliers = plane(L1_pts)
         L2_equation, L2_inliers = L2_plane(L1_equation, L2_pts)
+        #print("len(L2_inliers)",len(L2_inliers))
+        
         L3_equation, L3_inliers = L3_plane(L1_equation, L2_equation, L3_pts)
+        
+        #print("len(L3_inliers)",len(L3_inliers))
+        
         total_inliers =  L1_inliers.shape[0] + L2_inliers.shape[0]+ L3_inliers.shape[0]
         error = np.abs(np.dot(L1_equation[0],L1_equation[1])) + np.abs(np.dot(L2_equation[0],L2_equation[2])) + np.abs(np.dot(L3_equation[0],L3_equation[2])) 
         if total_inliers > best_inliners :
@@ -180,6 +206,7 @@ def fit_orthogonal_planes(planes_idx, planes_pts, viz_mode = True) :
     L1_pts = L1_pts[best_L1_inliers]
     L2_pts = L2_pts[best_L2_inliers]
     L3_pts = L3_pts[best_L3_inliers]
+
     total = np.concatenate((L1_pts, L2_pts), axis = 0)
     total = np.concatenate((total, L3_pts), axis = 0)
     square_pts = [L1_pts, L2_pts, L3_pts]
@@ -195,4 +222,4 @@ def fit_orthogonal_planes(planes_idx, planes_pts, viz_mode = True) :
     if viz_mode :
         visual()
 
-    return square_equations, square_pts
+    return square_equations, square_pts, square_equations

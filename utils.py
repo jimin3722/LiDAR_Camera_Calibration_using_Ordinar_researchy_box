@@ -59,7 +59,7 @@ def y_rotation(cuboid_ptx, gamma):
                       
     cuboid_ptx[0] = (rot_mat @ cuboid_ptx[0].T).T
     cuboid_ptx[1] = (rot_mat @ cuboid_ptx[1].T).T
-    cuboid_ptx[2] = (rot_mat @cuboid_ptx[2].T).T
+    cuboid_ptx[2] = (rot_mat @ cuboid_ptx[2].T).T
 
 
     return cuboid_ptx , rot_mat, gamma
@@ -98,7 +98,7 @@ def z_rotation(cuboid_ptx, gamma):
 
     cuboid_ptx[0] = (rot_mat @ cuboid_ptx[0].T).T
     cuboid_ptx[1] = (rot_mat @ cuboid_ptx[1].T).T
-    cuboid_ptx[2] = (rot_mat @cuboid_ptx[2].T).T
+    cuboid_ptx[2] = (rot_mat @ cuboid_ptx[2].T).T
 
     return cuboid_ptx, rot_mat, gamma
 
@@ -228,31 +228,38 @@ def pnp_solve(camera, lidar):
 def plot_box_corners(cuboid_ptx ,box_ptx, index):
     L1, L2, L3 = cuboid_ptx[0], cuboid_ptx[1], cuboid_ptx[2]
     cuboid_ptx_total = np.concatenate((L1, L2, L3), axis = 0)
-    bb = box_ptx.T # n x 3 
+    # bb = box_ptx.T # n x 3 
+    bb = box_ptx # n x 3 
 
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
     # ax.set_axis_off()
+
+    # 그리드 사이즈 동일하게 조정
+    max_range = np.max(cuboid_ptx_total)  # cuboid_ptx_total의 최대값
+    ax.set_box_aspect([max_range, max_range, max_range])
     
     ax.set_xlabel('x [meter]')
     ax.set_ylabel('y [meter]')
     ax.set_zlabel('z [meter]')
     ax.view_init(30, index)
     ax.scatter(cuboid_ptx_total[:, 0], cuboid_ptx_total[:, 1], cuboid_ptx_total[:, 2], s = 5,color ='black')
-    for i in range(6):
-        if i == 0 :
-            color = 'gray'
-        if i == 1:
-            color = 'blue'
-        if i == 2:
-            color = 'yellow'
-        if i == 3:
-            color = 'red'
-        if i == 4:
-            color = 'magenta'
-        if i == 5:
-            color = 'cyan'
-        ax.scatter(bb[i, 0], bb[i, 1], bb[i, 2], s = 150, color = color)
+    ax.scatter(bb[:, 0], bb[:, 1], bb[:, 2], s = 25, color = 'red')
+    
+    # for i in range(len(box_ptx)-1):
+    #     if i == 0 :
+    #         color = 'gray'
+    #     if i == 1:
+    #         color = 'blue'
+    #     if i == 2:
+    #         color = 'yellow'
+    #     if i == 3:
+    #         color = 'red'
+    #     if i == 4:
+    #         color = 'magenta'
+    #     if i == 5:
+    #         color = 'cyan'
+    #     ax.scatter(bb[i, 0], bb[i, 1], bb[i, 2], s = 150, color = color)
     
     # plt.savefig('./result/case2/'+str(index)+'.jpg')
     plt.show()
