@@ -204,7 +204,7 @@ if __name__ == '__main__' :
     # case 2 
     # box_ptx = np.array([[0.0, 0.21, 0.21, 0.0, 0.0, 0.0],
     #                     [0.0, 0.0, 0.0, 0.0, 0.456, 0.456],
-    #                     [0.0, 0.0, 0.39, 0.39, 0.0, 0.39]])   q
+    #                     [0.0, 0.0, 0.39, 0.39, 0.0, 0.39]])   
 
     # read raw point clouds from VLP-16
     # case 1
@@ -225,41 +225,42 @@ if __name__ == '__main__' :
 
     point_123 = find_point_123(cuboid_ptx, point_O, lines, cuboid_equations, box_spec)
 
-    points_123O = np.concatenate(([point_O], point_123), axis = 0)
+    point_1_2 = ((point_123[0] - point_O) + (point_123[1] - point_O)) + point_O
+    point_1_3 = ((point_123[0] - point_O) + (point_123[2] - point_O)) + point_O
+    point_3_2 = ((point_123[2] - point_O) + (point_123[1] - point_O)) + point_O
 
-    # rad1 = np.arccos( np.dot(v1,v2) / (np.linalg.norm(v1)*np.linalg.norm(v2)) )
-    # rad2 = np.arccos( np.dot(v3,v2) / (np.linalg.norm(v3)*np.linalg.norm(v2)) )
-    # rad3 = np.arccos( np.dot(v1,v3) / (np.linalg.norm(v1)*np.linalg.norm(v3)) )
+    points_123O = np.concatenate(([point_O], point_123, [point_1_2, point_1_3, point_3_2]), axis = 0)
 
-    # # 4. Box refinement
-    # copy_cuboid_ptx = copy.deepcopy(cuboid_ptx)
+    # 4. Box refinement
+    copy_cuboid_ptx = copy.deepcopy(cuboid_ptx)
 
-    # plot_box_corners(copy_cuboid_ptx, np.array(points_123O), 14)
+    plot_box_corners(copy_cuboid_ptx, np.array(points_123O), 14)
+
 
     # iter = 14
     # rot_z, rot_y, trans = box_refinement(cuboid_ptx, iter)
     # box_ptx = move_box(copy_cuboid_ptx, box_ptx ,rot_z, rot_y, trans, iter)
 
-    # 5. Find Box to Camera extrinsic parameterc 
-    box_to_camera_extrinsic = box_camera_extrinsic(box_ptx, camera_position) # 3x4
-    camera_intrinsic = np.load('./camera_infromation/intrinsic.npy')
+    # # 5. Find Box to Camera extrinsic parameterc 
+    # box_to_camera_extrinsic = box_camera_extrinsic(box_ptx, camera_position) # 3x4
+    # camera_intrinsic = np.load('./camera_infromation/intrinsic.npy')
 
-    # 6. Projection box points to realsense
-    project_points_sensor = projection(box_to_camera_extrinsic, camera_intrinsic, box_ptx, copy_cuboid_ptx)
+    # # 6. Projection box points to realsense
+    # project_points_sensor = projection(box_to_camera_extrinsic, camera_intrinsic, box_ptx, copy_cuboid_ptx)
     
     
-    filename = './asset/images/test_img.png'
-    img = cv2.imread(filename)
-    green = (0, 255, 0)
-    re_project_ptx = project_points_sensor.T
-    re_project_ptx = re_project_ptx[:, :2]
+    # filename = './asset/images/test_img.png'
+    # img = cv2.imread(filename)
+    # green = (0, 255, 0)
+    # re_project_ptx = project_points_sensor.T
+    # re_project_ptx = re_project_ptx[:, :2]
 
-    for i in re_project_ptx :
-        x, y = i
-        cv2.circle(img, (int(x), int(y)), 3, (0, 0, 255), -1)
+    # for i in re_project_ptx :
+    #     x, y = i
+    #     cv2.circle(img, (int(x), int(y)), 3, (0, 0, 255), -1)
     
-    cv2.imshow('image', img)
+    # cv2.imshow('image', img)
 
-    cv2.waitKey()
+    # cv2.waitKey()
     
     # plot_projection_points()
