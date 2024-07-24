@@ -301,17 +301,18 @@ def lidar_cam_cali(my_points, cv_image):
 
     normal_vecs, planes_pts, inliers, outliers = search_for_plane_candidnates(my_points, iter)               
 
+
     # 2. Select 3 planes
     perpendicular_plane_idx = find_perpendicular_planes(normal_vecs) # It will be L1, L2 and L3 plane
 
+
     # 3. Box fitting 
     cuboid_normals, cuboid_ptx, cuboid_equations  = fit_orthogonal_planes(perpendicular_plane_idx, planes_pts, viz_mode = True)
-
-    
+    # point_O 는 세 평면의 교점
     point_O, lines= find_intersection_and_lines(cuboid_equations)
-
+    # point_123 는 point_O에서 모서리 따라서 뻗쳐 나오는 박스의 3 꼭지점
     point_123 = find_point_123(cuboid_ptx, point_O, lines, cuboid_equations, box_spec)
-
+    #나머지 박스의 꼭지점
     point_1_2 = ((point_123[0] - point_O) + (point_123[1] - point_O)) + point_O
     point_1_3 = ((point_123[0] - point_O) + (point_123[2] - point_O)) + point_O
     point_3_2 = ((point_123[2] - point_O) + (point_123[1] - point_O)) + point_O
@@ -319,16 +320,17 @@ def lidar_cam_cali(my_points, cv_image):
     points_123O = np.concatenate(([point_O], point_123, [point_1_2, point_1_3, point_3_2]), axis = 0)
 
     # min_z_idx = np.argmin(points_123O[:,2])
-
     #points_123O = np.delete(points_123O, (min_z_idx), axis = 0)
+
+    # 의자에 가려지는 맨 밑에 점 삭제 >> 카메라 이미지가 가려지므로
     points_123O = np.delete(points_123O, (5), axis = 0)
 
-    # # 4. Box refinement
+
+    # 4. Box refinement
     copy_cuboid_ptx = copy.deepcopy(cuboid_ptx)
-    
     L1, L2, L3 = copy_cuboid_ptx[0], copy_cuboid_ptx[1], copy_cuboid_ptx[2]
     cuboid_ptx_total = np.concatenate((L1, L2, L3), axis = 0)
-
+    # 라이다 점과 박스 꼭짓점들 plot  
     # plot_box_corners(copy_cuboid_ptx, np.array(points_123O), 14)
     # plot_box_corners(cuboid_ptx_total, np.array(points_123O), 14)
     plot_box_corners(my_points, np.array(points_123O), 14)
@@ -338,10 +340,10 @@ def lidar_cam_cali(my_points, cv_image):
     # box_ptx = move_box(copy_cuboid_ptx, box_ptx ,rot_z, rot_y, trans, iter)
     # print(box_ptx)
 
+
     # 5. Find Box to Camera extrinsic parameterc 
     box_to_camera_extrinsic = box_camera_extrinsic(points_123O.T, camera_position) # 3x4
-    #camera_intrinsic = np.load('./camera_infromation/intrinsic.npy')
-    
+        
     s = 1.005#0.995#0.975
     w = 1280
     h = 720
@@ -359,7 +361,6 @@ def lidar_cam_cali(my_points, cv_image):
     
 
     # 6. Projection box points to realsense
-    
     project_points_sensor = projection(box_to_camera_extrinsic, camera_intrinsic, my_points)
 
 
