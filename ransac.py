@@ -1,7 +1,7 @@
 import numpy as np
 import random 
 import open3d as o3d
-from utils import make_color
+from .utils import make_color
 
 
 """
@@ -13,7 +13,7 @@ Call `fit(.)` to randomly take 3 points of pointcloud to verify inliers based on
 """
 
 def plane(pts):
-    max_iteration = 500
+    max_iteration = 700
     inliers = []
     equation = []
     thresh = 0.01
@@ -22,6 +22,7 @@ def plane(pts):
     best_inliers = []
 
     for _ in range(max_iteration):
+        #print('jm')
 
         # Samples 3 random points
         id_samples = random.sample(range(0, n_points), 3)
@@ -52,15 +53,14 @@ def plane(pts):
 
     return equation, inliers
 
-def find_plane(pcd, viz_mode) : 
-    # pcd to numpy 
-    pcd_np = np.asarray(pcd.points)
+def find_plane(pcd_np, iter, viz_mode) : 
     # add normal vectors 
     normal_vecs = np.empty((0, 4), dtype=np.float32)
     # add planse pts 
     planes_pts = []
     # count number of planes 
-    for idx in range(3): # config number of planes
+    for idx in range(iter): # config number of planes
+        print("idx:",idx)
         equation, inliers = plane(pcd_np) # find a plane
         normal_vecs = np.append(normal_vecs, [equation], axis = 0) # add normal_vector
 
@@ -87,7 +87,7 @@ def find_plane(pcd, viz_mode) :
 def L2_plane(L1_equation, pts):
     n_points = pts.shape[0]
     max_iter = 500
-    thresh = 0.01
+    thresh = 0.03
     best_inliers = []
     best_eq = []
     best_inliers = []
@@ -132,7 +132,7 @@ def L2_plane(L1_equation, pts):
 def L3_plane(L1_equation, L2_equation, pts):
     n_points = pts.shape[0]
     max_iter = 500
-    thresh = 0.02
+    thresh = 0.03
     best_inliers = []
     best_eq = []
     best_inliers = []
@@ -203,14 +203,36 @@ def fit_orthogonal_planes(planes_idx, planes_pts, viz_mode = True) :
             best_L3_inliers = L3_inliers
             square_equations = [L1_equation, L2_equation, L3_equation]
     
+
     L1_pts = L1_pts[best_L1_inliers]
     L2_pts = L2_pts[best_L2_inliers]
     L3_pts = L3_pts[best_L3_inliers]
 
-    total = np.concatenate((L1_pts, L2_pts), axis = 0)
-    total = np.concatenate((total, L3_pts), axis = 0)
-    square_pts = [L1_pts, L2_pts, L3_pts]
+    square_pts = [L1_pts, L2_pts, L3_pts]   
 
+
+    means = np.array([np.mean(L1_pts, axis = 0), np.mean(L2_pts, axis = 0), np.mean(L3_pts, axis = 0)])
+    print(means)
+
+    f = np.argmax(means[:,2], axis=0)
+    means[f] = [-9899,-999,-9999]
+
+    s = np.argmax(means[:,1], axis=0)
+     
+    print(f)
+    print(s)
+
+    for i  in range(3):
+        if i != f and i != s:
+            t=i 
+
+
+    square_equations = [square_equations[f], square_equations[s], square_equations[t]]
+    square_pts = [square_pts[f], square_pts[s], square_pts[t]]
+
+
+    total = np.concatenate((square_pts[0], square_pts[1]), axis = 0)
+    total = np.concatenate((total, L3_pts), axis = 0)
 
     def visual():
         total_color = make_color(total, 0)

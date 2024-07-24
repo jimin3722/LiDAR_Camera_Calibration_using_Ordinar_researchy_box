@@ -9,7 +9,12 @@ import math
 from numpy import linalg as LA
 import copy
 
+import os
+
 def make_color(pts, col):
+
+    col %= 5
+
     if col == 'red' or col == 1: 
         color = np.array([[255, 0, 0]])    
     elif col == 'blue' or col == 2: 
@@ -215,19 +220,45 @@ def find_perpendicular_planes(normal_vecs) :
     return perpendicular_plane_idx
 
 def pnp_solve(camera, lidar):
-    intrinsic = np.load('./camera_infromation/intrinsic.npy')
-    dist = np.load('./camera_infromation/distortion_coefficient.npy')
 
+    path = "/home/jimin/ros2_ws/src/lidar_camera_box/lidar_camera_box/LiDAR_Camera_Calibration_using_Ordinary_box/camera_infromation"
+    intrinsic_path = os.path.join(path, 'intrinsic.npy')
+    intrinsic = np.load(intrinsic_path)
+    
+    # w = 640
+    # h = 480
+    # fov = 40.5
+    w = 1280
+    h = 720
+    fov = 60
+
+    fc_x = h/(2*np.tan(np.deg2rad(fov/2)))
+    fc_y = fc_x
+    cx = w/2
+    cy = h/2
+
+    intrinsic = np.array([[fc_x,  0,   cx],
+                            [  0,   fc_y, cy],
+                            [  0,    0,    1]])
+    
+
+    dist_path = os.path.join(path, 'distortion_coefficient.npy')
+    dist = np.load(dist_path)
+    
     retval, rvec, tvec = cv2.solvePnP(lidar, camera, intrinsic, dist)
     R, _ = cv2.Rodrigues(rvec)
     RT = np.column_stack((R,tvec))
+    print("tvec", tvec)
+    print("np.linalg.norm(R)", np.linalg.norm(R))
 
     return RT
 
 
 def plot_box_corners(cuboid_ptx ,box_ptx, index):
-    L1, L2, L3 = cuboid_ptx[0], cuboid_ptx[1], cuboid_ptx[2]
-    cuboid_ptx_total = np.concatenate((L1, L2, L3), axis = 0)
+
+    # L1, L2, L3 = cuboid_ptx[0], cuboid_ptx[1], cuboid_ptx[2]
+    # cuboid_ptx_total = np.concatenate((L1, L2, L3), axis = 0)
+    cuboid_ptx_total = cuboid_ptx
     # bb = box_ptx.T # n x 3 
     bb = box_ptx # n x 3 
 
