@@ -9,12 +9,12 @@ This repository is created for the purpose of analyzing and conducting research 
 Result
 ------
 
+코드를 수정하여 ouster64 채널과 realsense데이터를 켈리브레이션 해보았습니다. 
+![Screenshot from 2024-01-04 03-31-29](https://github.com/user-attachments/assets/a6399cb8-50f4-4883-8453-6fad99f4e6aa)
 
 
 Dependencies
 ------------
-It is tested with opencv-4.2.0 
-Visualization used Matplotlib3D and Open3D.
 
 This repo reused 3d ransac code from ``pyranscas3d/plane.py`` [code](https://github.com/leomariga/pyRANSAC-3D/blob/master/pyransac3d/plane.py)
 
